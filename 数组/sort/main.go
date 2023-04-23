@@ -14,6 +14,12 @@
 3. 再拿起点与枢轴逐个比较，如果小于则i++，并继续比较,如果大于，则将该值替换至步骤2中j的位置，即s[j]=s[i];
 4. 重复步骤2、3，直到i>j，最后再将pivot放在s[i]，完成一轮比较
 5. 递归调用1~4， 每次调用都将数组分割成2个，直到数据长度为1，不再能分割
+其算法复杂度为O(nlogn)
+*/
+
+/*
+简单选择排序：依次从数组中的第1个元素开始与之后每一个元素比较，如果后面的元素比当前元素值小，就交换位置
+算法复杂度为O(n的平方)
 */
 package main
 
@@ -31,9 +37,68 @@ func main() {
 	// bubble(numlist)
 	// fmt.Println(numlist)
 	// fmt.Println(partition2(numlist, 0, len(numlist)-1))
-	quickSort2(numlist, 0, len(numlist)-1)
+	// quickSort2(numlist, 0, len(numlist)-1)
 	// partition2(numlist, m+1, len(numlist)-1)
+	simpleSort(numlist)
 	fmt.Println(numlist)
+}
+
+// 冒泡算法，相邻两两比较
+func bubble(s []int) {
+	for i := len(s) - 1; i > 0; i-- {
+		k := 0
+		j := 1
+		for k < i && j < i {
+			if s[k] > s[j] {
+				s[k], s[j] = s[j], s[k]
+			}
+			k++
+			j++
+		}
+	}
+}
+
+// 简单选择排序
+func simpleSort(s []int) {
+	for i := 0; i < len(s); i++ {
+		for j := i + 1; j < len(s); j++ {
+			if s[i] > s[j] {
+				s[i], s[j] = s[j], s[i]
+			}
+		}
+	}
+}
+func quickSort(s []int, start, end int) {
+	if start >= end {
+		return
+	}
+	i := partition2(s, start, end)
+	quickSort(s, start, i)
+	quickSort(s, i+1, end)
+}
+
+func partition2(s []int, start, end int) int {
+	pivot := s[start]
+	for start < end {
+		// 先从尾端开始逐个比较，大的不动，小的更换与pivot的位置
+		for start < end {
+			if s[end] > pivot {
+				end--
+				continue
+			}
+			s[start], s[end] = s[end], s[start]
+			break
+		}
+		for start < end {
+			if s[start] < pivot {
+				start++
+				continue
+			}
+			s[start], s[end] = s[end], s[start]
+			break
+		}
+	}
+	return start
 }
 
 func sort1(numList []int) {
@@ -115,52 +180,4 @@ func partition(arr []int, start, end int) int {
 		arr[start], arr[mark] = arr[mark], arr[start]
 	}
 	return mark
-}
-
-func quickSort2(s []int, start, end int) {
-	if start >= end {
-		return
-	}
-	i := partition2(s, start, end)
-	quickSort2(s, start, i)
-	quickSort2(s, i+1, end)
-}
-
-func partition2(s []int, start, end int) int {
-	pivot := s[start]
-	for start < end {
-		// 先从尾端开始逐个比较，大的不动，小的更换与pivot的位置
-		for start < end {
-			if s[end] > pivot {
-				end--
-				continue
-			}
-			s[start], s[end] = s[end], s[start]
-			break
-		}
-		for start < end {
-			if s[start] < pivot {
-				start++
-				continue
-			}
-			s[start], s[end] = s[end], s[start]
-			break
-		}
-	}
-	return start
-}
-
-// 冒泡算法，相邻两两比较
-func bubble(s []int) {
-	for i := len(s) - 1; i > 0; i-- {
-		k := 0
-		j := 1
-		for k < i && j < i {
-			if s[k] > s[j] {
-				s[k], s[j] = s[j], s[k]
-			}
-			k++
-			j++
-		}
-	}
 }
